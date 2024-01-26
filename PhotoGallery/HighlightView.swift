@@ -9,6 +9,9 @@ import SwiftUI
 
 struct HighlightView: View {
     
+    @State private var isClicked: Bool = false
+    @State private var imageFile: String = ""
+    
     private let images: [String] = [
         "bird.circle", "hare.circle", "tortoise.circle", "dog.circle",
         "cat.circle", "lizard.circle", "ant.circle", "ladybug.circle",
@@ -20,15 +23,23 @@ struct HighlightView: View {
     ]
     
     var body: some View {
-        ScrollView {
-            LazyVGrid(columns: adaptiveColumns, spacing: 20) {
-                ForEach(images.indices) { i in
-                    Image(systemName: images[i])
-                        .resizable()
-                        .scaledToFill()
-                        .frame(width: 300, height: 300)
+        NavigationView {
+            ScrollView {
+                LazyVGrid(columns: adaptiveColumns, spacing: 20) {
+                    ForEach(images.indices) { i in
+                        NavigationLink(destination: EnhancedView(imageFile: $imageFile), isActive: $isClicked) {
+                            Image(systemName: images[i])
+                                .resizable()
+                                .scaledToFill()
+                                .frame(width: 300, height: 300)
+                                .onTapGesture {
+                                    imageFile = images[i]
+                                    isClicked = true
+                                }
+                        }
+                    }
                 }
-            }
+            }.navigationViewStyle(.stack)
         }
     }
 }
